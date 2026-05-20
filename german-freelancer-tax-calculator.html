@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steuer Tracker — Freiberuflerin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#0d0d14;--white:#ffffff;
+  --gray-100:#f8f8fb;--gray-200:#e8e8f0;--gray-600:#5a5a7a;
+  --accent:#bb8fce;
+  --blue:#378ADD;--blue-bg:#e8f1fb;--blue-t:#1a4f8a;
+  --green:#1D9E75;--green-bg:#e6f7f1;--green-t:#0a5c42;
+  --amber:#EF9F27;--amber-bg:#fef4e0;--amber-t:#7a4e00;
+  --red:#D85A30;--red-bg:#fdf0eb;--red-t:#7a2a10;
+  --teal:#1D9E75;--teal-bg:#e6f7f1;--teal-t:#0a5c42;
+  --border:#e8e8f0;--border2:#d0d0df;
+  --text:#0d0d14;--text2:#5a5a7a;--text3:#9090b0;
+  --surface:#ffffff;--surface2:#f8f8fb;
+  --r:18px;--rs:10px;
+}
+body{font-family:'Inter',sans-serif;background:var(--gray-100);color:var(--black);min-height:100vh;line-height:1.6;}
+
+.topbar{background:var(--black);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-brand{font-family:'Poppins',sans-serif;font-weight:900;font-size:18px;letter-spacing:-0.02em;color:var(--white);}
+.topbar-brand span{color:var(--accent);}
+.topbar-sub{font-size:11px;color:rgba(255,255,255,0.38);margin-top:2px;letter-spacing:0.04em;}
+.year-badge{font-size:12px;font-weight:600;background:rgba(255,255,255,0.10);padding:6px 16px;border-radius:100px;color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.15);}
+
+.nav{display:flex;gap:2px;background:var(--white);padding:6px;border-radius:100px;margin:1.5rem 40px 0;border:1px solid var(--gray-200);}
+.nav-btn{flex:1;padding:9px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--gray-600);border-radius:100px;transition:all 0.18s;}
+.nav-btn:hover{color:var(--black);}
+.nav-btn.active{background:var(--black);color:var(--white);font-weight:600;}
+
+.page{display:none;padding:1.5rem 40px 4rem;}
+.page.active{display:block;}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:640px){.g2,.g4{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr 1fr;}}
+
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;}
+.ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:var(--accent);margin-bottom:1rem;}
+
+.metric{background:var(--gray-100);border-radius:var(--rs);padding:16px 18px;border:1px solid var(--gray-200);}
+.metric .ml{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:6px;}
+.metric .mv{font-size:20px;font-weight:900;font-family:'Poppins',sans-serif;letter-spacing:-0.02em;color:var(--black);}
+.metric .ms{font-size:11px;color:var(--text3);margin-top:3px;}
+.metric.blue{background:var(--blue-bg);border-color:#c5daf5;}.metric.blue .mv{color:var(--blue-t);}
+.metric.green{background:var(--green-bg);border-color:#b0e5d4;}.metric.green .mv{color:var(--green-t);}
+.metric.amber{background:var(--amber-bg);border-color:#f5d89a;}.metric.amber .mv{color:var(--amber-t);}
+.metric.red{background:var(--red-bg);border-color:#f0c4b0;}.metric.red .mv{color:var(--red-t);}
+
+.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:1.25rem;}
+@media(max-width:640px){.month-grid{grid-template-columns:repeat(3,1fr);}}
+.mc{background:var(--white);border:1px solid var(--gray-200);border-radius:14px;padding:12px 10px 10px;cursor:pointer;transition:all 0.18s;position:relative;}
+.mc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.06);}
+.mc.sel{border-color:var(--accent);background:#faf7fd;box-shadow:0 0 0 3px rgba(187,143,206,0.15);}
+.mc.has{border-color:var(--border2);}
+.mc .mn{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.mc.sel .mn{color:var(--accent);}
+.mc .mr{font-size:14px;font-weight:900;font-family:'Poppins',sans-serif;letter-spacing:-0.01em;color:var(--black);}
+.mc .me{font-size:10px;color:var(--text3);margin-top:2px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);position:absolute;top:8px;right:8px;}
+
+.ir{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.ir label{font-size:13px;color:var(--text2);min-width:170px;font-weight:500;}
+.ir input[type=number]{flex:1;font-size:14px;padding:9px 13px;border:1px solid var(--gray-200);border-radius:var(--rs);background:var(--white);color:var(--black);font-family:'Inter',sans-serif;font-weight:600;}
+.ir input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(187,143,206,0.15);}
+.ir .unit{font-size:12px;color:var(--text3);font-weight:600;}
+
+.er{display:flex;gap:8px;margin-bottom:8px;align-items:center;}
+.er input[type=text]{flex:1;font-size:13px;padding:8px 11px;border:1px solid var(--gray-200);border-radius:var(--rs);background:var(--white);color:var(--black);font-family:'Inter',sans-serif;}
+.er input[type=number]{width:100px;font-size:13px;padding:8px 11px;border:1px solid var(--gray-200);border-radius:var(--rs);background:var(--white);color:var(--black);font-family:'Inter',sans-serif;font-weight:600;}
+.er input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(187,143,206,0.15);}
+.er .unit{font-size:12px;color:var(--text3);font-weight:500;}
+.er .db{background:none;border:1px solid var(--gray-200);border-radius:var(--rs);padding:7px 10px;cursor:pointer;color:var(--text3);font-size:12px;}
+.er .db:hover{background:var(--red-bg);border-color:var(--red);color:var(--red-t);}
+
+.add-btn{background:none;border:1px solid var(--gray-200);border-radius:100px;padding:7px 18px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);font-family:'Inter',sans-serif;transition:all 0.15s;}
+.add-btn:hover{border-color:var(--border2);background:var(--gray-100);}
+.save-btn{background:var(--black);color:var(--white);border:none;border-radius:100px;padding:10px 26px;cursor:pointer;font-size:13px;font-family:'Poppins',sans-serif;font-weight:700;float:right;transition:opacity 0.2s,transform 0.2s;}
+.save-btn:hover{opacity:0.82;transform:translateY(-1px);}
+
+.tr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.tr label.tl{font-size:13px;color:var(--text2);font-weight:500;}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.ts{position:absolute;inset:0;background:var(--gray-200);border-radius:11px;cursor:pointer;transition:background 0.2s;}
+.ts:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.tog input:checked+.ts{background:var(--black);}
+.tog input:checked+.ts:before{transform:translateX(16px);}
+
+.br{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.bl{font-size:12px;color:var(--text2);min-width:185px;font-weight:500;}
+.bt{flex:1;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden;}
+.bf{height:100%;border-radius:3px;transition:width 0.35s;}
+.ba{font-size:12px;font-family:'Inter',sans-serif;font-weight:700;min-width:80px;text-align:right;}
+hr.dv{border:none;border-top:1px solid var(--gray-200);margin:12px 0;}
+
+.ai{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:14px;margin-bottom:9px;}
+.ai.urgent{background:var(--red-bg);border:1px solid #f0c4b0;}
+.ai.soon{background:var(--amber-bg);border:1px solid #f5d89a;}
+.ai.ok{background:var(--green-bg);border:1px solid #b0e5d4;}
+.ai.past{background:var(--gray-100);border:1px solid var(--gray-200);}
+.aicon{font-size:16px;margin-top:1px;flex-shrink:0;}
+.ai.urgent .aicon{color:var(--red);}
+.ai.soon .aicon{color:var(--amber);}
+.ai.ok .aicon{color:var(--green);}
+.ai.past .aicon{color:var(--text3);}
+.atitle{font-size:13px;font-weight:700;}
+.ai.urgent .atitle{color:var(--red-t);}
+.ai.soon .atitle{color:var(--amber-t);}
+.ai.ok .atitle{color:var(--green-t);}
+.ai.past .atitle{color:var(--text3);}
+.abody{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.5;}
+.adate{font-weight:700;}
+
+.yt{width:100%;border-collapse:collapse;font-size:13px;}
+.yt th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);padding:8px 12px;text-align:right;border-bottom:2px solid var(--gray-200);}
+.yt th:first-child{text-align:left;}
+.yt td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--gray-200);font-family:'Inter',sans-serif;color:var(--text2);font-weight:500;}
+.yt td:first-child{text-align:left;font-family:'Poppins',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.04em;color:var(--black);}
+.yt tr.tot td{border-top:2px solid var(--black);border-bottom:none;font-weight:700;color:var(--black);font-size:13px;padding-top:14px;}
+.yt tr:not(.tot):hover td{background:var(--gray-100);}
+.pos{color:var(--green-t)!important;}
+.neg{color:var(--red-t)!important;}
+.dim{color:var(--text3)!important;}
+
+.qb{background:var(--gray-100);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--gray-200);}
+.qbh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);margin-bottom:10px;}
+.qbr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;align-items:center;}
+.qbr .ql{color:var(--text2);font-weight:500;}
+.qbr .qv{font-weight:700;color:var(--black);}
+.qbr .qv.dim{color:var(--text3);font-weight:400;}
+.qbr .qv.over{color:var(--red-t);}
+.qbt{display:flex;justify-content:space-between;border-top:1px solid var(--gray-200);padding-top:10px;margin-top:8px;font-size:14px;font-weight:900;font-family:'Poppins',sans-serif;letter-spacing:-0.01em;}
+.qbt .qv{color:var(--black);}
+
+.note{font-size:11px;color:var(--text3);line-height:1.65;margin-top:10px;}
+select{font-size:13px;padding:8px 12px;border:1px solid var(--gray-200);border-radius:var(--rs);background:var(--white);color:var(--black);font-family:'Inter',sans-serif;cursor:pointer;font-weight:500;}
+select:focus{outline:none;border-color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-brand">Breuer Land <span>Studios</span></div>
+    <div class="topbar-sub">Steuer Tracker · Freiberuflerin · Berlin · SK2 · TK · 2026</div>
+  </div>
+  <div class="year-badge" id="ybadge">2026</div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('monthly',this)">Monthly log</button>
+  <button class="nav-btn" onclick="showPage('quarterly',this)">Quarterly VAT</button>
+  <button class="nav-btn" onclick="showPage('yearly',this)">Yearly summary</button>
+  <button class="nav-btn" onclick="showPage('settings',this)">Settings</button>
+</div>
+
+<div id="page-monthly" class="page active">
+  <div class="month-grid" id="mgrid"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct" id="med-title">January — income &amp; expenses</div>
+      <div class="ir">
+        <label>Revenue (net, excl. VAT)</label>
+        <input type="number" id="m-rev" min="0" step="100" placeholder="0" oninput="liveCalc()">
+        <span class="unit">€</span>
+      </div>
+      <hr class="dv">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--gray-600);margin-bottom:10px;">Expenses this month</div>
+      <div id="mexp-list"></div>
+      <button class="add-btn" onclick="addMExp()">+ Add expense</button>
+
+      <hr class="dv" style="margin-top:14px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--gray-600);margin-bottom:10px;">Home office — Tagespauschale</div>
+      <div class="ir">
+        <label>Days worked from home</label>
+        <input type="number" id="m-hodays" min="0" max="31" step="1" placeholder="0" oninput="liveCalc()">
+        <span class="unit">days</span>
+      </div>
+      <div id="ho-preview" style="font-size:12px;color:var(--green-t);margin-bottom:4px;padding:10px 12px;background:var(--green-bg);border-radius:var(--rs);border:1px solid #9FE1CB;font-weight:500;"></div>
+      <p class="note" style="margin-top:0;">6 € per day · max 210 days/year (1.260 €). Deducted from taxable profit. Keep a calendar as proof.</p>
+
+      <div style="margin-top:1.25rem;">
+        <button class="save-btn" id="save-btn" onclick="saveMonth()">Save month</button>
+        <div style="clear:both;"></div>
+      </div>
+    </div>
+    <div>
+      <div class="g4" id="m-metrics" style="margin-bottom:1rem;"></div>
+      <div class="card">
+        <div class="ct">Income tax estimate</div>
+        <div id="m-bars"></div>
+        <hr class="dv">
+        <div class="br">
+          <span class="bl" style="font-weight:500;color:var(--text);font-size:13px;">Net take-home</span>
+          <span style="flex:1"></span>
+          <span id="m-takehome" style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--blue-t);"></span>
+        </div>
+        <p class="note">Based on annualized profit, Steuerklasse 2. VAT shown is collected from clients — not your income.</p>
+      </div>
+      <div class="card" style="border-top:4px solid #1D9E75;">
+        <div class="ct">TK Krankenversicherung — monthly payment</div>
+        <div id="tk-card"></div>
+        <p class="note" style="margin-top:10px;">Rates 2026: 14.6% KV base + 2.5% TK Zusatzbeitrag + 3.4% Pflegeversicherung. Capped at Beitragsbemessungsgrenze (5.512,50 €/mo profit). Minimum floor ~1.177,50 €/mo. Annual true-up after tax return.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-quarterly" class="page">
+  <div class="card">
+    <div class="ct">VAT settings — Umsatzsteuer</div>
+    <div class="tr" style="margin-bottom:12px;">
+      <label class="tog"><input type="checkbox" id="vat-on" onchange="renderAll()"><span class="ts"></span></label>
+      <label class="tl" for="vat-on">VAT-registered (Regelbesteuerung)</label>
+      <select id="vat-rate" onchange="renderAll()" style="margin-left:auto;">
+        <option value="0.19" selected>19% standard</option>
+        <option value="0.07">7% reduced</option>
+      </select>
+    </div>
+    <div class="tr">
+      <label class="tog"><input type="checkbox" id="vat-qly" onchange="renderAll()"><span class="ts"></span></label>
+      <label class="tl" for="vat-qly">Quarterly filing (default: monthly)</label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">VAT per quarter — Voranmeldung amounts</div>
+    <div id="q-blocks"></div>
+    <p class="note">Each quarter shows VAT collected per month based on your logged revenue. The total is your USt Voranmeldung amount due by the 10th of the following month/quarter.</p>
+  </div>
+  <div class="card">
+    <div class="ct">Upcoming payment deadlines</div>
+    <div id="q-alarms"></div>
+  </div>
+</div>
+
+<div id="page-yearly" class="page">
+  <div class="g4" id="y-metrics" style="margin-bottom:1rem;"></div>
+  <div class="card">
+    <div class="ct">Month-by-month breakdown</div>
+    <div style="overflow-x:auto;"><table class="yt" id="y-table"></table></div>
+  </div>
+  <div class="card">
+    <div class="ct">Cumulative tax obligations — year to date</div>
+    <div id="y-cumul"></div>
+    <p class="note">Einkommensteuer &amp; KV estimated from annualized monthly profit (Steuerklasse 2, TK). Vorauszahlungen due Mar 10 / Jun 10 / Sep 10 / Dec 10.</p>
+  </div>
+</div>
+
+<div id="page-settings" class="page">
+  <div class="card">
+    <div class="ct">Profile</div>
+    <div class="ir">
+      <label>Tax year</label>
+      <select id="s-year" onchange="setYear(this.value)" style="flex:1;">
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026" selected>2026</option>
+        <option value="2027">2027</option>
+      </select>
+    </div>
+    <div class="ir">
+      <label>Steuerklasse</label>
+      <select id="s-sk" onchange="renderAll()" style="flex:1;">
+        <option value="2" selected>2 — Alleinerziehend (+4.260 € Entlastungsbetrag)</option>
+        <option value="1">1 — Single (no extra deduction)</option>
+      </select>
+    </div>
+    <div class="ir">
+      <label>Krankenkasse</label>
+      <select id="s-kk" onchange="renderAll()" style="flex:1;">
+        <option value="0.171" selected>TK 2026 (14.6% + 2.5% KV = 17.1%)</option>
+        <option value="0.163">TK 2025 (14.6% + 1.7% KV = 16.3%)</option>
+        <option value="0.162">AOK (~16.2% KV)</option>
+        <option value="0.172">Barmer 2026 (~17.2% KV)</option>
+      </select>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Default monthly expense template</div>
+    <div id="def-exp-list"></div>
+    <button class="add-btn" onclick="addDefExp()">+ Add default</button>
+    <div style="margin-top:1rem;">
+      <button class="save-btn" onclick="saveDefs()">Save defaults</button>
+      <div style="clear:both;"></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:var(--red);">
+    <div class="ct" style="color:var(--red-t);">Danger zone</div>
+    <button class="add-btn" style="border-color:var(--red);color:var(--red-t);" onclick="clearData()">Clear all data for this year</button>
+  </div>
+</div>
+
+<div style="background:var(--black);padding:56px 40px;text-align:center;">
+  <p style="font-family:'Poppins',sans-serif;font-weight:300;font-size:20px;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto 8px;line-height:1.65;">This calculator runs entirely in your browser —</p>
+  <p style="font-family:'Poppins',sans-serif;font-weight:700;font-size:22px;color:var(--white);margin-bottom:16px;letter-spacing:-0.01em;">no data leaves your device.</p>
+  <p style="font-size:15px;color:rgba(255,255,255,0.42);max-width:420px;margin:0 auto 32px;line-height:1.7;">Want your own copy? Email me and I'll send you the file.</p>
+  <a href="mailto:mariel@breuer.land" style="display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:10px;font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;text-decoration:none;color:var(--white);background:var(--accent);">mariel@breuer.land &rarr;</a>
+</div>
+
+<footer style="background:var(--gray-100);padding:40px 40px;text-align:center;border-top:1px solid var(--gray-200);">
+  <div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;letter-spacing:-0.02em;color:var(--black);margin-bottom:12px;">Breuer Land <span style="color:var(--accent);">Studios</span></div>
+  <p style="font-size:14px;color:var(--gray-600);margin-bottom:6px;">By <a href="https://breuer.land/studio.html" style="color:var(--accent);text-decoration:none;">Mariel Breuer</a> · Berlin · <a href="mailto:mariel@breuer.land" style="color:var(--accent);text-decoration:none;">mariel@breuer.land</a></p>
+  <p style="font-size:12px;color:var(--text3);margin-top:14px;">© 2026 Breuer Land Studios · Steuer Tracker v1.0 · Not tax advice — consult your Steuerberater.</p>
+</footer>
+
+<script>
+const MS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MSH=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+let curYear=2026, curMon=new Date().getMonth();
+let yearData={};
+let defExps=[{name:'Software & tools',amount:100},{name:'Phone & internet',amount:50}];
+let editExps=[];
+
+function fmt(n){return Math.round(n).toLocaleString('de-DE')+' €';}
+function fmtD(d){return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function daysTo(d){const n=new Date();n.setHours(0,0,0,0);return Math.round((d-n)/86400000);}
+
+function storeKey(){return 'steuer_data_'+curYear;}
+function loadData(){try{const r=localStorage.getItem(storeKey());yearData=r?JSON.parse(r):{};defExps=JSON.parse(localStorage.getItem('steuer_defs')||JSON.stringify(defExps));}catch(e){yearData={};}}
+function persistData(){try{localStorage.setItem(storeKey(),JSON.stringify(yearData));}catch(e){}}
+function getMon(m){return yearData[m]?JSON.parse(JSON.stringify(yearData[m])):{revenue:0,expenses:JSON.parse(JSON.stringify(defExps)),hoDays:0};}
+function getKK(){return parseFloat(document.getElementById('s-kk')?.value||'0.171');}
+function getSK(){return document.getElementById('s-sk')?.value==='1'?0:4260;}
+function getVatRate(){return parseFloat(document.getElementById('vat-rate')?.value||'0.19');}
+function vatOn(){return document.getElementById('vat-on')?.checked||false;}
+function vatQly(){return document.getElementById('vat-qly')?.checked||false;}
+
+function calcESt(profit){
+  const tax_prof=Math.max(0,profit-11784-getSK());
+  if(tax_prof<=0)return 0;
+  let t=0;
+  if(tax_prof<=15999){const y=tax_prof/10000;t=(979.18*y+1400)*y;}
+  else if(tax_prof<=62809){const z=(tax_prof-15999)/10000;t=(192.59*z+2397)*z+966.53;}
+  else if(tax_prof<=277825){t=tax_prof*0.42-9972.98;}
+  else{t=tax_prof*0.45-17602.28;}
+  return Math.max(0,t);
+}
+
+function calcMonth(rev,exps,hoDays){
+  const expT=exps.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const hoDed=(hoDays||0)*6;
+  const profMo=Math.max(0,rev-expT-hoDed);
+  const profAnn=profMo*12;
+  const est=calcESt(profAnn);
+  const soli=profAnn>100000?est*0.055:0;
+  // KV cap 2026: Beitragsbemessungsgrenze = 66,150 €/yr (monthly 5,512.50)
+  const kvCapAnn=66150;
+  const kvBase=Math.min(profAnn,kvCapAnn);
+  const kvFloorAnn=14130; // minimum income floor ~1,177.50/mo
+  const kvEffBase=Math.max(kvBase,kvFloorAnn);
+  const kk=getKK(); // KV rate (KK + Zusatzbeitrag only, no PV)
+  const pvRate=0.034; // Pflegeversicherung 3.4% (childless 2026)
+  const kvMo=Math.min(kvEffBase,kvCapAnn)*kk/12;
+  const pvMo=Math.min(kvEffBase,kvCapAnn)*pvRate/12;
+  const totalKVAnn=(kvMo+pvMo)*12;
+  return{expT,hoDed,profMo,estMo:est/12,soliMo:soli/12,kvMo,pvMo,vatMo:rev*getVatRate(),net:profMo-(est+soli)/12-kvMo-pvMo};
+}
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  renderAll();
+}
+
+function setYear(y){curYear=parseInt(y);document.getElementById('ybadge').textContent=y;loadData();renderAll();}
+
+function renderMGrid(){
+  document.getElementById('mgrid').innerHTML=MS.map((m,i)=>{
+    const d=yearData[i];
+    const has=d&&(d.revenue>0||(d.expenses&&d.expenses.length));
+    const rev=d?.revenue||0;
+    const exp=d?.expenses?.reduce((s,e)=>s+(parseFloat(e.amount)||0),0)||0;
+    return`<div class="mc${i===curMon?' sel':''}${has?' has':''}" onclick="selectMon(${i})">
+      ${has?'<div class="dot"></div>':''}
+      <div class="mn">${MSH[i]}</div>
+      <div class="mr">${has?fmt(rev):'—'}</div>
+      ${has?`<div class="me">−${fmt(exp)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function selectMon(i){
+  curMon=i;
+  const d=getMon(i);
+  editExps=JSON.parse(JSON.stringify(d.expenses||defExps));
+  document.getElementById('m-rev').value=d.revenue||'';
+  document.getElementById('m-hodays').value=d.hoDays||'';
+  document.getElementById('med-title').textContent=MS[i]+' — income & expenses';
+  renderMGrid();renderMExps();liveCalc();
+}
+
+function renderMExps(){
+  document.getElementById('mexp-list').innerHTML=editExps.map((e,i)=>`
+    <div class="er">
+      <input type="text" value="${e.name}" oninput="editExps[${i}].name=this.value">
+      <input type="number" min="0" step="10" value="${e.amount||''}" placeholder="0" oninput="editExps[${i}].amount=parseFloat(this.value)||0;liveCalc()">
+      <span class="unit">€</span>
+      <button class="db" onclick="editExps.splice(${i},1);renderMExps();liveCalc()">✕</button>
+    </div>`).join('');
+}
+
+function addMExp(){editExps.push({name:'New expense',amount:0});renderMExps();}
+
+function saveMonth(){
+  const rev=parseFloat(document.getElementById('m-rev').value)||0;
+  const hoDays=parseInt(document.getElementById('m-hodays').value)||0;
+  yearData[curMon]={revenue:rev,expenses:JSON.parse(JSON.stringify(editExps)),hoDays};
+  persistData();renderMGrid();
+  const btn=document.getElementById('save-btn');
+  btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save month';},1500);
+}
+
+function liveCalc(){
+  const rev=parseFloat(document.getElementById('m-rev').value)||0;
+  const hoDays=parseInt(document.getElementById('m-hodays').value)||0;
+  const t=calcMonth(rev,editExps,hoDays);
+  const von=vatOn(),vr=getVatRate();
+  const kk=getKK();
+
+  const totalHoYear=Object.values(yearData).reduce((s,m)=>s+(m.hoDays||0),0)+(hoDays-(yearData[curMon]?.hoDays||0));
+  const hoPreview=document.getElementById('ho-preview');
+  if(hoDays>0){
+    hoPreview.textContent=hoDays+' days × 6 € = '+fmt(hoDays*6)+' deduction · '+totalHoYear+'/210 days used this year';
+    hoPreview.style.display='block';
+  } else {
+    hoPreview.textContent='No home office days logged yet this month.';
+    hoPreview.style.display='block';
+  }
+
+  document.getElementById('m-metrics').innerHTML=`
+    <div class="metric blue"><div class="ml">Gross invoice</div><div class="mv">${fmt(Math.round(von?rev*(1+vr):rev))}</div><div class="ms">${von?'incl. VAT':'no VAT'}</div></div>
+    <div class="metric"><div class="ml">Profit</div><div class="mv">${fmt(Math.round(t.profMo))}</div><div class="ms">after exp. + HO</div></div>
+    <div class="metric amber"><div class="ml">ESt + Soli</div><div class="mv">${fmt(Math.round(t.estMo+t.soliMo))}</div><div class="ms">income tax</div></div>
+    <div class="metric green"><div class="ml">Take-home</div><div class="mv">${fmt(Math.round(t.net))}</div><div class="ms">after tax + KV</div></div>`;
+
+  // Income tax bars (no KV here)
+  const bars=[
+    {l:'Einkommensteuer',a:t.estMo,c:'#185FA5'},
+    {l:'Solidaritätszuschlag',a:t.soliMo,c:'#888780'},
+  ];
+  if(t.hoDed>0)bars.push({l:'Tagespauschale deduction',a:t.hoDed,c:'#3B6D11'});
+  if(von)bars.push({l:'USt (pass-through)',a:t.vatMo,c:'#EF9F27'});
+  const mx=Math.max(...bars.map(b=>b.a),1);
+  document.getElementById('m-bars').innerHTML=bars.map(b=>`
+    <div class="br"><span class="bl">${b.l}</span><div class="bt"><div class="bf" style="width:${Math.min(100,Math.round(b.a/mx*100))}%;background:${b.c}"></div></div><span class="ba">${fmt(Math.round(b.a))}</span></div>`).join('');
+  document.getElementById('m-takehome').textContent=fmt(Math.round(t.net));
+
+  // TK card — separate, detailed
+  const profAnn=t.profMo*12;
+  const kvCapAnn=66150;
+  const kvFloorAnn=14130;
+  const kvEffBase=Math.max(Math.min(profAnn,kvCapAnn),kvFloorAnn);
+  const isCapped=profAnn>=kvCapAnn;
+  const isFloored=profAnn<kvFloorAnn;
+  const kvBase=kvEffBase*kk/12;
+  const pvBase=kvEffBase*0.034/12;
+  const tkTotal=kvBase+pvBase;
+  const tkBars=[
+    {l:'KV base (14.6%)',a:kvEffBase*0.146/12,c:'#0F6E56'},
+    {l:'TK Zusatzbeitrag (2.5%)',a:kvEffBase*0.025/12,c:'#1D9E75'},
+    {l:'Pflegeversicherung (3.4%)',a:pvBase,c:'#5DCAA5'},
+  ];
+  const tkMx=Math.max(...tkBars.map(b=>b.a),1);
+  document.getElementById('tk-card').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div class="metric" style="background:var(--green-bg);border-top:3px solid var(--green);"><div class="ml" style="color:var(--green-t);">KV contribution</div><div class="mv" style="color:var(--green-t);">${fmt(Math.round(kvBase))}</div><div class="ms">/month</div></div>
+      <div class="metric" style="background:var(--green-bg);border-top:3px solid var(--green);"><div class="ml" style="color:var(--green-t);">Pflegeversicherung</div><div class="mv" style="color:var(--green-t);">${fmt(Math.round(pvBase))}</div><div class="ms">/month</div></div>
+      <div class="metric" style="background:var(--black);border-top:3px solid var(--green);"><div class="ml" style="color:rgba(255,255,255,0.45);">Total TK payment</div><div class="mv" style="color:var(--white);">${fmt(Math.round(tkTotal))}</div><div class="ms" style="color:rgba(255,255,255,0.35);">/month</div></div>
+    </div>
+    ${tkBars.map(b=>`<div class="br"><span class="bl">${b.l}</span><div class="bt"><div class="bf" style="width:${Math.min(100,Math.round(b.a/tkMx*100))}%;background:${b.c}"></div></div><span class="ba" style="color:var(--green-t);">${fmt(Math.round(b.a))}</span></div>`).join('')}
+    ${isCapped?`<div style="margin-top:10px;font-size:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--rs);color:var(--amber-t);border:1px solid #FAC775;">Cap reached — contributions max out above 5.512,50 €/mo profit.</div>`:''}
+    ${isFloored?`<div style="margin-top:10px;font-size:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--rs);color:var(--amber-t);border:1px solid #FAC775;">Below minimum floor — TK applies min base ~1.177,50 €/mo. Contact TK to request lower provisional amount.</div>`:''}
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--gray-600);border-top:1px solid var(--gray-200);padding-top:10px;">
+      <span>Based on <span style="font-family:'DM Mono',monospace;font-weight:500;color:var(--black);">${fmt(Math.round(t.profMo))}/mo</span> profit</span>
+      <span>Annual total: <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--green-t);">${fmt(Math.round(tkTotal*12))}</span></span>
+    </div>`;
+}
+
+function renderQuarterly(){
+  const von=vatOn(),vr=getVatRate(),qly=vatQly();
+  const year=curYear;
+  const quarters=[[0,1,2],[3,4,5],[6,7,8],[9,10,11]];
+
+  if(!von){
+    document.getElementById('q-blocks').innerHTML='<p class="note" style="padding:8px 0;">Enable VAT above to see quarterly amounts.</p>';
+    renderAlarms();return;
+  }
+
+  document.getElementById('q-blocks').innerHTML=quarters.map((mons,qi)=>{
+    const dueDate=new Date(year,[3,6,9,12][qi],10);
+    const qVat=mons.reduce((s,m)=>s+(yearData[m]?.revenue||0)*vr,0);
+    const days=daysTo(dueDate);
+    const rows=mons.map(m=>{
+      const rev=yearData[m]?.revenue||0;
+      const hasLog=yearData[m]&&yearData[m].revenue>0;
+      return`<div class="qbr"><span class="ql">${MSH[m]}</span><span class="qv${!hasLog?' dim':''}">${!hasLog?'not logged':fmt(rev)+' → '+fmt(Math.round(rev*vr))}</span></div>`;
+    }).join('');
+    return`<div class="qb">
+      <div class="qbh">Q${qi+1} &nbsp;·&nbsp; ${mons.map(m=>MSH[m]).join(' – ')} &nbsp;·&nbsp; due <span class="adate">${fmtD(dueDate)}</span> (${days<0?Math.abs(days)+'d ago':days+'d'})
+      </div>
+      ${rows}
+      <div class="qbt"><span style="color:var(--gray-600);font-weight:400;">Total VAT due</span><span class="qv${days<0?' over':''}">${fmt(Math.round(qVat))}</span></div>
+    </div>`;
+  }).join('');
+  renderAlarms();
+}
+
+function renderAlarms(){
+  const von=vatOn(),vr=getVatRate(),qly=vatQly();
+  const year=curYear;
+  const deadlines=[];
+
+  [[0,1,2],[3,4,5],[6,7,8],[9,10,11]].forEach((mons,qi)=>{
+    const d=new Date(year,[2,5,8,11][qi],10);
+    const qProfit=mons.reduce((s,m)=>{
+      const md=yearData[m];if(!md)return s;
+      const exp=md.expenses?.reduce((a,e)=>a+(parseFloat(e.amount)||0),0)||0;
+      return s+Math.max(0,md.revenue-exp);
+    },0);
+    const annP=qProfit/3*12;
+    const estA=calcESt(annP);
+    const amt=(estA+(annP>100000?estA*0.055:0))/4;
+    deadlines.push({label:`Q${qi+1} Vorauszahlung (ESt)`,date:d,amount:amt,type:'est'});
+  });
+
+  if(von){
+    if(qly){
+      [[0,1,2],[3,4,5],[6,7,8],[9,10,11]].forEach((mons,qi)=>{
+        const d=new Date(year,[3,6,9,12][qi],10);
+        const amt=mons.reduce((s,m)=>s+(yearData[m]?.revenue||0)*vr,0);
+        deadlines.push({label:`Q${qi+1} USt Voranmeldung`,date:d,amount:amt,type:'ust'});
+      });
+    } else {
+      for(let m=0;m<12;m++){
+        const d=new Date(year,m+1,10);
+        const amt=(yearData[m]?.revenue||0)*vr;
+        deadlines.push({label:`${MSH[m]} USt Voranmeldung`,date:d,amount:amt,type:'ust'});
+      }
+    }
+  }
+
+  deadlines.sort((a,b)=>a.date-b.date);
+  const shown=deadlines.filter(d=>daysTo(d.date)>-45).slice(0,8);
+  const el=document.getElementById('q-alarms');
+  if(!shown.length){el.innerHTML='<p class="note">No upcoming deadlines.</p>';return;}
+  el.innerHTML=shown.map(d=>{
+    const days=daysTo(d.date);
+    let cls='ok',icon='ti-circle-check';
+    if(days<0){cls='past';icon='ti-clock-off';}
+    else if(days<=7){cls='urgent';icon='ti-alert-circle';}
+    else if(days<=30){cls='soon';icon='ti-clock';}
+    const tag=d.type==='ust'
+      ?`<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:rgba(186,117,23,0.15);color:#633806;margin-left:6px;font-weight:500;">USt</span>`
+      :`<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:rgba(24,95,165,0.12);color:#0C447C;margin-left:6px;font-weight:500;">ESt</span>`;
+    return`<div class="ai ${cls}">
+      <i class="ti ${icon} aicon" aria-hidden="true"></i>
+      <div>
+        <div class="atitle">${d.label}${tag}</div>
+        <div class="abody">Due <span class="adate">${fmtD(d.date)}</span> &nbsp;·&nbsp;
+          ${days<0?`<strong>${Math.abs(days)}d overdue</strong>`:days===0?'<strong>Today</strong>':`${days} days`}
+          &nbsp;·&nbsp; ~${fmt(Math.round(d.amount))}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderYearly(){
+  const von=vatOn(),vr=getVatRate();
+  let tRev=0,tExp=0,tHo=0,tProfit=0,tEst=0,tKV=0,tVat=0,tNet=0;
+  let totalHoDays=0;
+
+  const rows=MS.map((m,i)=>{
+    const d=yearData[i];
+    if(!d||(!d.revenue&&!d.expenses?.length)){
+      return`<tr><td>${MSH[i]}</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td></tr>`;
+    }
+    const rev=d.revenue||0;
+    const hoDays=d.hoDays||0;
+    const t=calcMonth(rev,d.expenses||[],hoDays);
+    const vat=von?rev*vr:0;
+    tRev+=rev;tExp+=t.expT;tHo+=t.hoDed;tProfit+=t.profMo;
+    tEst+=(t.estMo+t.soliMo);tKV+=(t.kvMo+t.pvMo);tVat+=vat;tNet+=t.net;
+    totalHoDays+=hoDays;
+    return`<tr>
+      <td>${MSH[i]}</td>
+      <td>${fmt(rev)}</td>
+      <td class="neg">−${fmt(Math.round(t.expT))}</td>
+      <td class="pos" style="color:var(--green-t);">−${fmt(Math.round(t.hoDed))}${hoDays>0?' ('+hoDays+'d)':''}</td>
+      <td>${fmt(Math.round(t.profMo))}</td>
+      <td class="neg">−${fmt(Math.round(t.estMo+t.soliMo))}</td>
+      <td style="color:var(--green-t);">−${fmt(Math.round(t.kvMo+t.pvMo))}</td>
+      <td class="${von?'':'dim'}">${von?fmt(Math.round(vat)):'—'}</td>
+    </tr>`;
+  }).join('');
+
+  const hoWarn=totalHoDays>210?`<span style="color:var(--red-t);font-size:11px;"> ⚠ exceeds 210-day cap</span>`:'';
+  document.getElementById('y-table').innerHTML=`
+    <thead><tr>
+      <th>Month</th><th>Revenue</th><th>Expenses</th><th>HO deduction</th><th>Profit</th><th>ESt + Soli</th><th>KV + PV</th><th>USt due</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr class="tot">
+      <td>Total YTD</td>
+      <td>${fmt(tRev)}</td>
+      <td>−${fmt(Math.round(tExp))}</td>
+      <td class="pos">−${fmt(Math.round(tHo))} (${totalHoDays}d)${hoWarn}</td>
+      <td>${fmt(Math.round(tProfit))}</td>
+      <td>−${fmt(Math.round(tEst))}</td>
+      <td>−${fmt(Math.round(tKV))}</td>
+      <td>${von?fmt(Math.round(tVat)):'—'}</td>
+    </tr></tfoot>`;
+
+  document.getElementById('y-metrics').innerHTML=`
+    <div class="metric blue"><div class="ml">Total revenue</div><div class="mv">${fmt(tRev)}</div><div class="ms">net excl. VAT</div></div>
+    <div class="metric"><div class="ml">Total profit</div><div class="mv">${fmt(Math.round(tProfit))}</div><div class="ms">after exp. + HO</div></div>
+    <div class="metric amber"><div class="ml">Total taxes + KV</div><div class="mv">${fmt(Math.round(tEst+tKV))}</div><div class="ms">ESt + Soli + KV + PV</div></div>
+    <div class="metric green"><div class="ml">Net take-home</div><div class="mv">${fmt(Math.round(tNet))}</div><div class="ms">year to date</div></div>`;
+
+  const cItems=[
+    {l:'Einkommensteuer + Soli',a:tEst,c:'#185FA5'},
+    {l:'TK KV (14.6% + 2.5% Zusatz)',a:tKV*(getKK()/(getKK()+0.034)),c:'#0F6E56'},
+    {l:'Pflegeversicherung (3.4%)',a:tKV*(0.034/(getKK()+0.034)),c:'#5DCAA5'},
+  ];
+  if(von)cItems.push({l:'USt collected (pass-through)',a:tVat,c:'#EF9F27'});
+  const total=tEst+tKV;
+  const mx=Math.max(...cItems.map(c=>c.a),1);
+  const hoCapOk=totalHoDays<=210;
+  const hoSaving=tHo>0?Math.round(calcESt(tProfit*12)/12*tHo/Math.max(tProfit,1)*6):0;
+  document.getElementById('y-cumul').innerHTML=
+    cItems.map(c=>`<div class="br"><span class="bl">${c.l}</span><div class="bt"><div class="bf" style="width:${Math.min(100,Math.round(c.a/mx*100))}%;background:${c.c}"></div></div><span class="ba">${fmt(Math.round(c.a))}</span></div>`).join('')+
+    `<hr class="dv">
+    <div class="br"><span class="bl" style="font-weight:500;color:var(--text);font-size:13px;">Total ESt + KV obligations YTD</span><span style="flex:1"></span><span style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--red-t);">${fmt(Math.round(total))}</span></div>
+    ${von?`<div class="br" style="margin-top:4px;"><span class="bl" style="color:var(--gray-600);font-size:12px;">+ USt to remit (pass-through)</span><span style="flex:1"></span><span style="font-size:13px;font-family:'DM Mono',monospace;color:var(--gray-600);">${fmt(Math.round(tVat))}</span></div>`:''}
+    ${tHo>0?`<hr class="dv"><div style="background:var(--green-bg);border-radius:var(--rs);padding:12px 14px;border:1px solid #9FE1CB;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);margin-bottom:6px;">Tagespauschale savings</div>
+      <div class="br" style="margin-bottom:0;"><span class="bl" style="color:var(--gray-600);">HO days logged (${totalHoDays}/210)${!hoCapOk?' ⚠ cap exceeded':''}</span><span style="flex:1"></span><span style="font-family:'DM Mono',monospace;font-weight:500;color:var(--green-t);">−${fmt(Math.round(tHo))} deducted</span></div>
+    </div>`:''}`;
+}
+
+function renderDefExps(){
+  const el=document.getElementById('def-exp-list');
+  if(!el)return;
+  el.innerHTML=defExps.map((e,i)=>`
+    <div class="er">
+      <input type="text" value="${e.name}" oninput="defExps[${i}].name=this.value">
+      <input type="number" min="0" step="10" value="${e.amount||''}" placeholder="0" oninput="defExps[${i}].amount=parseFloat(this.value)||0">
+      <span class="unit">€/mo</span>
+      <button class="db" onclick="defExps.splice(${i},1);renderDefExps()">✕</button>
+    </div>`).join('');
+}
+
+function addDefExp(){defExps.push({name:'New expense',amount:0});renderDefExps();}
+function saveDefs(){
+  try{localStorage.setItem('steuer_defs',JSON.stringify(defExps));}catch(e){}
+  const btns=document.querySelectorAll('#page-settings .save-btn');
+  btns.forEach(b=>{b.textContent='Saved ✓';setTimeout(()=>{b.textContent='Save defaults';},1500);});
+}
+function clearData(){
+  if(!confirm('Clear all data for '+curYear+'? This cannot be undone.'))return;
+  yearData={};persistData();renderAll();
+}
+
+function renderAll(){
+  renderMGrid();renderMExps();liveCalc();
+  renderQuarterly();renderYearly();renderDefExps();
+}
+
+function init(){
+  loadData();
+  const d=getMon(curMon);
+  editExps=JSON.parse(JSON.stringify(d.expenses||defExps));
+  document.getElementById('m-rev').value=d.revenue||'';
+  document.getElementById('m-hodays').value=d.hoDays||'';
+  document.getElementById('med-title').textContent=MS[curMon]+' — income & expenses';
+  renderAll();
+}
+
+init();
+</script>
+</body>
+</html>
